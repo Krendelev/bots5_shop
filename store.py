@@ -10,13 +10,12 @@ AUTH_URL = os.environ["AUTH_URL"]
 BASE_URL = os.environ["BASE_URL"]
 CLIENT_ID = os.environ["CLIENT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-EXPIRES_IN = 3600
 
 
 def get_access_token():
     expires = int(os.getenv("EXPIRES", 0))
 
-    if expires <= int(time.time()) - EXPIRES_IN:
+    if expires <= int(time.time()):
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         payload = {
             "client_id": CLIENT_ID,
