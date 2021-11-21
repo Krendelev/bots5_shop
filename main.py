@@ -117,7 +117,7 @@ def main():
     )
     load_dotenv()
 
-    updater = Updater(os.environ["BOT_TOKEN"])
+    updater = Updater(os.environ["TELEGRAM_TOKEN"])
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
