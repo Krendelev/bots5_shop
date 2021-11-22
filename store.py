@@ -2,14 +2,9 @@ import os
 import time
 
 import requests
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
-load_dotenv()
-
-AUTH_URL = os.environ["AUTH_URL"]
-BASE_URL = os.environ["BASE_URL"]
-CLIENT_ID = os.environ["CLIENT_ID"]
-CLIENT_SECRET = os.environ["CLIENT_SECRET"]
+BASE_URL = dotenv_values(".env").get("BASE_URL")
 
 
 def get_access_token():
@@ -18,11 +13,11 @@ def get_access_token():
     if expires <= int(time.time()):
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         payload = {
-            "client_id": CLIENT_ID,
-            "client_secret": CLIENT_SECRET,
+            "client_id": os.environ["CLIENT_ID"],
+            "client_secret": os.environ["CLIENT_SECRET"],
             "grant_type": "client_credentials",
         }
-        response = requests.post(AUTH_URL, headers=headers, data=payload)
+        response = requests.post(os.environ["AUTH_URL"], headers=headers, data=payload)
         response.raise_for_status()
         content = response.json()
         os.environ["ACCESS_TOKEN"] = content["access_token"]

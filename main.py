@@ -16,6 +16,8 @@ import store
 
 logger = logging.getLogger(__name__)
 
+# Use 100 range to unequivocally define state and eliminate possible confusion with weigth
+# Can't be int because of CallbackQueryHandler pattern handling
 MENU, PRODUCT, CART, CHECKOUT = "100 101 102 103".split()
 
 
@@ -31,10 +33,10 @@ def start(update, context):
 
 
 def show_menu(update, context):
-    update.effective_message.delete()
     update.effective_message.reply_text(
         "Please choose:", reply_markup=context.user_data["menu"]
     )
+    update.effective_message.delete()
 
 
 def handle_menu_choice(update, context):
@@ -47,16 +49,18 @@ def handle_menu_choice(update, context):
 
     keyboard = [
         [
-            InlineKeyboardButton(f"{x} kg", callback_data=f"{PRODUCT} {query.data} {x}")
-            for x in [1, 5, 10]
+            InlineKeyboardButton(
+                f"{weight} kg", callback_data=f"{PRODUCT} {query.data} {weight}"
+            )
+            for weight in [1, 5, 10]
         ],
         [InlineKeyboardButton("Menu", callback_data=MENU)],
         [InlineKeyboardButton("Shopping cart", callback_data=CART)],
     ]
-    update.effective_message.delete()
     update.effective_message.reply_photo(
         picture, caption=caption, reply_markup=InlineKeyboardMarkup(keyboard)
     )
+    update.effective_message.delete()
 
 
 def add_to_cart(update, context):
@@ -84,10 +88,10 @@ def handle_cart(update, context):
     keyboard.append([InlineKeyboardButton("Menu", callback_data=MENU)])
     keyboard.append([InlineKeyboardButton("Checkout", callback_data=CHECKOUT)])
 
-    update.effective_message.delete()
     update.effective_message.reply_text(
         content, reply_markup=InlineKeyboardMarkup(keyboard)
     )
+    update.effective_message.delete()
 
 
 def handle_checkout(update, context):
@@ -102,8 +106,8 @@ def handle_checkout(update, context):
         return show_menu(update, context)
 
     query.answer()
-    update.effective_message.delete()
     update.effective_message.reply_text("Please enter your email:")
+    update.effective_message.delete()
 
 
 def error(update, context):
