@@ -103,7 +103,7 @@ def handle_checkout(update, context):
             store.create_customer(name, email)
 
         update.effective_message.reply_text("Thank you!")
-        return show_menu(update, context)
+        return
 
     query.answer()
     update.effective_message.reply_text("Please enter your email:")
